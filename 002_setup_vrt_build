@@ -1,0 +1,99 @@
+#!/bin/bash
+
+#set machine type
+MACHINE="imx6qsabreauto"
+BRANCH="daisy"
+
+
+# check for parameters
+EXPECTED_ARGS=1
+if [ $# -ne $EXPECTED_ARGS ]
+then
+  echo "Usage: `basename $0` build_environment_directory"
+  exit -1
+fi
+
+# get current path
+CUR_PATH=`pwd`
+
+# get local path
+BIN_PATH=`readlink -f $0`
+BIN_PATH=`dirname $BIN_PATH`
+
+# dump paths
+PROJECT_DIR=`readlink -f $1`
+BUILD_DIR="$PROJECT_DIR/build"
+echo "project dir is: $PROJECT_DIR"
+echo "build dir is: $BUILD_DIR"
+echo "bin dir is: $BIN_PATH"
+
+# create project environment
+if [ ! -e "$PROJECT_DIR" ]; then
+    mkdir "$PROJECT_DIR"
+fi
+cd "$PROJECT_DIR"
+
+# create update environment script
+echo "#!/bin/bash" > setup-environment
+echo "" >> setup-environment
+echo "cd \"$PROJECT_DIR/source\"" >> setup-environment
+echo "MACHINE=$MACHINE source ./setup-environment \"../build\"" >> setup-environment
+chmod a+x setup-environment
+
+# create update environment script
+echo "#!/bin/bash" > setup-environment
+echo "" >> setup-environment
+echo "cd \"$PROJECT_DIR/source\"" >> setup-environment
+echo "MACHINE=$MACHINE source ./setup-environment \"../build\"" >> setup-environment
+chmod a+x setup-environment
+
+# link bin path
+if [ ! -e bin ]; then
+    ln -s "$BIN_PATH/bin" "bin"
+fi
+
+# create build dir
+if [ ! -e build ]; then
+    mkdir build
+fi
+
+# create source dir
+if [ ! -e source ]; then
+    mkdir source
+fi
+cd source
+
+# init freescale layer
+$BIN_PATH/bin/repo init -u http://github.com/Freescale/fsl-community-bsp-platform -b $BRANCH
+$BIN_PATH/bin/repo sync
+
+# setup freescale layer
+cd "$PROJECT_DIR"
+source ./setup-environment
+
+# update manifest & resync repo
+cd "$PROJECT_DIR/source"
+cp .repo/manifest.xml .repo/manifest.orig
+rm .repo/manifest.xml
+cp "$BIN_PATH/repo/manifest.xml" .repo/manifest.xml
+$BIN_PATH/bin/repo sync
+source fsl-setup-release.sh -b "../build"
+
+# update environment layer
+cd "$PROJECT_DIR"
+source ./setup-environment
+
+# update site conf
+if [ ! -e "$PROJECT_DIR/build/conf" ]; then
+    mkdir "$PROJECT_DIR/build/conf"
+fi
+cp -f "$BIN_PATH/repo/site.conf" "$PROJECT_DIR/build/conf/"
+cp -f "$BIN_PATH/repo/bblayers.conf" "$PROJECT_DIR/build/conf/"
+
+# copy dev shell
+cp -f "$BIN_PATH/repo/dev-shell" "$PROJECT_DIR/"
+cp -f "$BIN_PATH/repo/dev-shell-init" "$PROJECT_DIR/"
+
+# append realtime virtualization layer
+cd "$PROJECT_DIR/source/sources/meta-fsl-vrt"
+source "append_vrt_layer.inc"

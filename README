@@ -1,0 +1,77 @@
+# ----------------------------------------------------------------------------
+#
+# This file descripes how to install a yocto-build environment with
+# pre-installed freescale-community-layers and the fsl-vrt layer on an
+# ubuntu system. The fsl-vrt layer provides a stable 3.12.1 vanilla kernel 
+# with stable 3.12.1-rt4 patches on top. A build example for an rt-sato-image
+# is also included.
+#
+
+
+# ----------------------------------------------------------------------------
+# 1. prepare ubuntu system
+#
+#---+
+    # ------------------------------------------------------------------------
+    # 1.1. install git
+    #
+    $: sudo apt-get install git
+
+    # ------------------------------------------------------------------------
+    # 1.2. clone virtual realtime layer utilities
+    #
+    $: git clone git://github.com/WhiteSheet/fsl-vrt-utils.git
+
+    # ------------------------------------------------------------------------
+    # 1.3. install required packages
+    #
+    $: ./fsl-vrt-utils/001_install_ubuntu
+
+
+
+# ----------------------------------------------------------------------------
+# 2. create project directory
+#
+#---+
+    # ------------------------------------------------------------------------
+    # 2.1. create virtual realtime build project
+    #
+    # usage: MACHINE=<machine config> ./fsl-vrt-utils/002_ <project_dir>
+    $: MACHINE=imx6qsabreauto ./fsl-vrt-utils/002_setup_vrt_build ./imx6_rt
+
+
+
+# ----------------------------------------------------------------------------
+# 3. open dev shell and build virtual realtime image
+#
+#---+
+    # ------------------------------------------------------------------------
+    # 3.1. change to project directory
+    #
+    $: cd ./imx6_rt
+
+    # ------------------------------------------------------------------------
+    # 3.2. open dev shell
+    #
+    $: ./dev-shell
+
+    # ------------------------------------------------------------------------
+    # 3.3. build sato-rt image inside the dev-shell
+    #
+    #---+
+        # --------------------------------------------------------------------
+        # 3.3.1. build image via bitbake
+        #
+        $: bitbake core-image-sato-rt
+
+        # --------------------------------------------------------------------
+        # 3.3.2. list deployed images
+        #
+        $: ls -al tmp/deploy/images
+
+        # --------------------------------------------------------------------
+        # 3.3.3. leave dev-shell
+        #
+        $: exit
+
+

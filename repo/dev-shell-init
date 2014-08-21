@@ -1,0 +1,11 @@
+source ./setup-environment
+echo
+echo "########################################################################"
+echo "welcome to the yocto dev shell of project"
+echo "    `pwd`"
+echo "########################################################################"
+echo ""
+echo "use command 'exit' to leave dev shell"
+echo ""
+echo ""
+bash -i
