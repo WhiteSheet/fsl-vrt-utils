@@ -97,3 +97,7 @@ cp -f "$BIN_PATH/repo/dev-shell-init" "$PROJECT_DIR/"
 # append realtime virtualization layer
 cd "$PROJECT_DIR/source/sources/meta-fsl-vrt"
 source "append_vrt_layer.inc"
+
+# build fix for freescale bsp
+cd "$PROJECT_DIR"
+ln -s source/sources sources
