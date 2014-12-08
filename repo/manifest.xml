@@ -18,7 +18,7 @@
 	<copyfile dest="setup-environment" src="setup-environment"/>
   </project>
 
-  <project remote="white" revision="0352b2cdbcb4e145e1702c8e8464403dee32532a" name="meta-fsl-vrt" path="sources/meta-fsl-vrt" revision="master"/>
+  <project remote="white" revision="0352b2cdbcb4e145e1702c8e8464403dee32532a" name="meta-fsl-vrt" path="sources/meta-fsl-vrt" />
 
   <project remote="freescale" revision="e1085deb3d915d2a95a65cceadc77c6de0dadfb6" name="meta-fsl-arm-extra" path="sources/meta-fsl-arm-extra"/>
   <project remote="freescale" revision="f141c7d1158b8addbd6f1ed047a1b47c2ed85f8f" name="meta-fsl-demos" path="sources/meta-fsl-demos"/>
